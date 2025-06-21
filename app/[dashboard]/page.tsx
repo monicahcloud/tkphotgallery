@@ -8,7 +8,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import Image from "next/image";
 
-export default function UploadImage() {
+interface UploadImageProps {
+  onUploadSuccess?: (url: string) => void;
+}
+
+export default function UploadImage({ onUploadSuccess }: UploadImageProps) {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -30,6 +34,7 @@ export default function UploadImage() {
 
       if (data.url) {
         setPreviewUrl(data.url);
+        onUploadSuccess?.(data.url); // notify parent
         toast.success("Upload successful!");
       } else {
         toast.error("Upload failed.");
@@ -60,7 +65,7 @@ export default function UploadImage() {
               id="image"
               type="file"
               accept="image/*"
-              className="cursor-pointer file:bg-bg-teal-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-md file:cursor-pointer"
+              className="cursor-pointer file:bg-teal-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-md file:cursor-pointer"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
             />
           </div>
@@ -80,8 +85,11 @@ export default function UploadImage() {
               <Image
                 src={previewUrl}
                 alt="Uploaded preview"
+                width={400}
+                height={300}
                 className="rounded-md border border-teal-600 max-h-64 w-auto mx-auto"
               />
+
               <a
                 href={previewUrl}
                 download

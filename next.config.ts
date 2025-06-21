@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  domains: [
+    "https://tkphotgallery.vercel.app/",
+    "your-vercel-blob-url.vercel-storage.com",
+  ],
 };
 
 export default nextConfig;

@@ -34,7 +34,7 @@ export default function UploadImage() {
       } else {
         toast.error("Upload failed.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong.");
     } finally {
       setIsUploading(false);

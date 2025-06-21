@@ -8,6 +8,15 @@ import UploadImage from "../components/UploadImage";
 
 export default function Home() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const imagesPerPage = 9; // Adjust as needed
+  const totalPages = Math.ceil(uploadedImages.length / imagesPerPage);
+  const indexOfLastImage = currentPage * imagesPerPage;
+  const indexOfFirstImage = indexOfLastImage - imagesPerPage;
+  const currentImages = uploadedImages.slice(
+    indexOfFirstImage,
+    indexOfLastImage
+  );
 
   // Fetch saved images from the DB on page load
   useEffect(() => {
@@ -34,7 +43,7 @@ export default function Home() {
       <header>
         <Header />
       </header>
-      <main className="min-h-screen bg-white px-4 py-8">
+      <main className="min-h-screen bg-white px-4 py-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
           {/* Left Column - Upload */}
           <div>
@@ -50,7 +59,7 @@ export default function Home() {
               <p className="text-gray-600">No images uploaded yet.</p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {uploadedImages.map((url, i) => (
+                {currentImages.map((url, i) => (
                   <div
                     key={i}
                     className="relative rounded-md border border-teal-200 overflow-hidden">
@@ -71,6 +80,25 @@ export default function Home() {
                 ))}
               </div>
             )}
+            <div className="flex justify-center mt-4 space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1 text-sm bg-teal-600 text-white rounded disabled:opacity-50">
+                Previous
+              </button>
+              <span className="text-sm text-teal-700 font-medium">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 text-sm bg-teal-600 text-white rounded disabled:opacity-50">
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </main>
